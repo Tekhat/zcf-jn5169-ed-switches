@@ -20,6 +20,12 @@ PUBLIC void APP_vInitialise(tpfExtendedStatusCallBack pfExtendedStatusCallBack)
 {
     DBG_vPrintf(TRACE_INIT, "APP INIT: APP_vInitialise called\n");
     PDM_eInitialise(0);
+#ifdef WIPE_PDM_ON_BOOT
+    // One-shot build: purge PDM records left in EEPROM by the stock Xiaomi firmware
+    // (EEPROM can't be erased by the flash programmer when CRP is enabled)
+    PDM_vDeleteAllDataRecords();
+    DBG_vPrintf(TRUE, "APP INIT: PDM wiped (WIPE_PDM_ON_BOOT build)\n");
+#endif
     DBG_vPrintf(TRACE_INIT, "APP INIT: Set PWRM_vInit(E_AHI_SLEEP_OSCON_RAMON)\n");
     PWRM_vInit(E_AHI_SLEEP_OSCON_RAMON);
     DBG_vPrintf(TRACE_INIT, "APP INIT: Init PDUM\n");
